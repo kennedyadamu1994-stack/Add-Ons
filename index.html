@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The NBRH — Club Services Store</title>
+    <meta name="description" content="Upgrade your club with The NBRH. Browse our club add-ons and content services.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Young+Serif&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --accent: #FF1B6E;
+            --accent-dim: rgba(255,27,110,0.12);
+            --accent-mid: rgba(255,27,110,0.3);
+            --text: #ffffff;
+            --text-muted: rgba(255,255,255,0.65);
+            --text-faint: rgba(255,255,255,0.35);
+            --bg: #1B1B1B;
+            --bg-subtle: #242424;
+            --bg-card: #222222;
+            --bg-card-hover: #272727;
+            --border: rgba(255,255,255,0.09);
+            --border-hover: rgba(255,27,110,0.4);
+            --nav-bg: rgba(27,27,27,0.96);
+            --font-serif: 'Young Serif', Georgia, serif;
+            --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --max: 1080px;
+            --r: 4px;
+            --gold: #FFCC00;
+            --gold-dim: rgba(255,204,0,0.1);
+            --gold-mid: rgba(255,204,0,0.3);
+            --league: #4FC3F7;
+            --league-dim: rgba(79,195,247,0.1);
+            --league-mid: rgba(79,195,247,0.3);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+            html { scroll-behavior: auto; }
+        }
+
+        html { scroll-behavior: smooth; font-size: 16px; }
+
+        /* FIX: Use flex column on html/body so footer sits flush with no trailing space */
+        html, body { height: 100%; }
+
+        body {
+            font-family: var(--font-sans);
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* FIX: Main content grows to fill available space; footer is pushed to bottom */
+        main {
+            flex: 1 0 auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* FIX: Footer never grows, always sits flush at the bottom */
+        footer {
+            flex-shrink: 0;
+        }
+
+        /* FIX: Zero out bottom padding on any section immediately before the footer or CTA band,
+           and on the last section in the flow — prevents trailing whitespace no matter
+           which elements are visible/hidden. Matches the league page's implicit behaviour. */
+        section:last-of-type,
+        section:has(+ .cta-band),
+        section:has(+ .divider + footer),
+        section:has(+ footer) {
+            padding-bottom: 0;
+        }
+
+        /* FIX: CTA band sits directly on footer with no gap */
+        .cta-band + footer,
+        .divider + footer {
+            /* border-top already provides the visual break */
+        }
+
+        .scroll-bar {
+            position: fixed; top: 0; left: 0;
+            height: 2px; background: var(--accent);
+            z-index: 2000; width: 0%;
+            transition: width 0.08s linear;
+        }
+
+        nav {
+            position: sticky; top: 0;
+            background: var(--nav-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 999;
+        }
+        .nav-inner {
+            max-width: var(--max); margin: 0 auto;
+            padding: 0.9rem 1.5rem;
+            display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+        }
+        .nav-brand img { height: 30px; width: auto; display: block; object-fit: contain; }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; overflow-x: auto; }
+        .nav-links::-webkit-scrollbar { display: none; }
+        .nav-links a {
+            color: var(--text-muted); text-decoration: none;
+            font-size: 0.8125rem; white-space: nowrap; letter-spacing: 0.01em;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+
+        .wrap { max-width: var(--max); margin: 0 auto; padding: 0 1.5rem; }
+        .divider { height: 1px; background: var(--border); flex-shrink: 0; }
+
+        .eyebrow {
+            font-size: 0.75rem; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 0.12em;
+            color: var(--accent); margin-bottom: 0.75rem;
+        }
+        h1, h2, h3 { font-family: var(--font-serif); font-weight: 400; }
+        h1 { font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1.08; letter-spacing: -0.02em; }
+        h2 { font-size: clamp(1.6rem, 4vw, 2.4rem); line-height: 1.15; letter-spacing: -0.015em; }
+        h3 { font-size: 1.05rem; line-height: 1.3; }
+
+        section { padding: 4rem 0; }
+        @media (max-width: 768px) { section { padding: 2.5rem 0; } }
+
+        .section-head { text-align: center; margin-bottom: 2.5rem; }
+        .section-head h2 { margin-bottom: 0.75rem; }
+        .section-head .sub { font-size: 1rem; color: var(--text-muted); font-style: italic; max-width: 55ch; margin: 0 auto; }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.8rem 1.6rem; font-size: 0.9rem; font-weight: 500;
+            text-decoration: none; border-radius: var(--r);
+            transition: all 0.2s; border: none; cursor: pointer; font-family: inherit;
+        }
+        .btn-primary { background: var(--accent); color: #fff; }
+        .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+        .btn-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+        /* HERO */
+        .hero { position: relative; overflow: hidden; text-align: center; padding: 0; }
+        .hero-bg {
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(255,27,110,0.12) 0%, transparent 70%);
+        }
+        .hero-bg::after {
+            content: ''; position: absolute; inset: 0;
+            background: linear-gradient(to bottom, transparent 60%, var(--bg) 100%);
+        }
+        .hero-content { position: relative; z-index: 1; padding: 6rem 1.5rem 4rem; }
+        @media (max-width: 768px) { .hero-content { padding: 4rem 1.5rem 3rem; } }
+
+        .store-badge {
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            background: var(--accent-dim); border: 1px solid var(--accent-mid);
+            border-radius: 100px; padding: 0.35rem 1rem;
+            font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em;
+            text-transform: uppercase; color: var(--accent); margin-bottom: 1.5rem;
+        }
+        .store-badge::before { content: '●'; font-size: 0.5rem; }
+
+        .hero h1 { margin-bottom: 1rem; max-width: 18ch; margin-left: auto; margin-right: auto; }
+        .hero p.lead { font-size: clamp(1rem, 2vw, 1.15rem); color: var(--text-muted); max-width: 50ch; margin: 0 auto 2rem; }
+
+        .hero-stats {
+            display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap;
+            margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--border);
+        }
+        .hero-stat { text-align: center; }
+        .hero-stat-num { font-family: var(--font-serif); font-size: 1.6rem; color: var(--accent); display: block; line-height: 1; }
+        .hero-stat-label { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.35rem; }
+
+        /* ACCORDION */
+        #store { padding: 3rem 0; }
+
+        .accordion { display: flex; flex-direction: column; }
+
+        .accordion-item { border-top: 1px solid var(--border); }
+        .accordion-item:last-child { border-bottom: 1px solid var(--border); }
+
+        .accordion-trigger {
+            width: 100%; background: none; border: none; cursor: pointer;
+            font-family: var(--font-sans); color: var(--text);
+            padding: 1.4rem 0;
+            display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+            text-align: left; transition: color 0.2s;
+        }
+        .accordion-trigger:hover { color: var(--accent); }
+        .accordion-trigger.open { color: var(--accent); }
+        .accordion-trigger.leagues-trigger:hover,
+        .accordion-trigger.leagues-trigger.open { color: var(--league); }
+
+        .accordion-trigger-left { display: flex; align-items: center; gap: 0.85rem; flex-wrap: wrap; }
+
+        .accordion-tag {
+            font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.09em; padding: 0.22rem 0.65rem; border-radius: 2px; flex-shrink: 0;
+        }
+        .tag-paid     { background: var(--gold-dim);   color: var(--gold);   border: 1px solid var(--gold-mid); }
+        .tag-milestone { background: var(--accent-dim); color: var(--accent); border: 1px solid var(--accent-mid); }
+        .tag-leagues  { background: var(--league-dim); color: var(--league); border: 1px solid var(--league-mid); }
+
+        .accordion-title { font-family: var(--font-serif); font-size: 1.15rem; font-weight: 400; }
+        .accordion-sub { font-size: 0.8rem; color: var(--text-faint); font-style: italic; }
+        @media (max-width: 600px) { .accordion-sub { display: none; } }
+
+        .accordion-chevron {
+            font-size: 0.85rem; color: var(--text-faint); flex-shrink: 0;
+            transition: transform 0.3s ease, color 0.2s;
+        }
+        .accordion-trigger.open .accordion-chevron { transform: rotate(180deg); color: var(--accent); }
+        .accordion-trigger.leagues-trigger.open .accordion-chevron { color: var(--league); }
+
+        /* CSS grid trick for smooth height animation with no JS height measurement */
+        .accordion-body {
+            display: grid; grid-template-rows: 0fr;
+            transition: grid-template-rows 0.35s ease;
+        }
+        .accordion-body.open { grid-template-rows: 1fr; }
+        .accordion-body-inner { overflow: hidden; }
+        .accordion-body-content { padding-bottom: 2.5rem; }
+
+        /* PRODUCT GRID */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+        @media (max-width: 660px) { .product-grid { grid-template-columns: 1fr; } }
+
+        .product-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r);
+            padding: 1.75rem; display: flex; flex-direction: column; gap: 1rem;
+            transition: border-color 0.25s, transform 0.25s, background 0.25s;
+            position: relative; overflow: hidden;
+        }
+        .product-card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+            background: linear-gradient(to right, transparent, var(--accent), transparent);
+            opacity: 0; transition: opacity 0.25s;
+        }
+        .product-card:hover { border-color: var(--border-hover); transform: translateY(-3px); background: var(--bg-card-hover); }
+        .product-card:hover::before { opacity: 1; }
+
+        .product-card.league-card { border-color: var(--league-mid); }
+        .product-card.league-card::before { background: linear-gradient(to right, transparent, var(--league), transparent); }
+        .product-card.league-card:hover { border-color: var(--league); }
+
+        .product-header { display: flex; align-items: flex-start; gap: 0.85rem; }
+        .product-icon {
+            width: 40px; height: 40px; background: var(--accent-dim); border: 1px solid var(--accent-mid);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem; flex-shrink: 0;
+        }
+        .product-icon.league-icon { background: var(--league-dim); border-color: var(--league-mid); }
+        .product-title-block { flex: 1; }
+        .product-title-block h3 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .product-title-block .tagline { font-size: 0.82rem; color: var(--text-muted); }
+
+        .product-description { font-size: 0.875rem; color: var(--text-muted); line-height: 1.65; flex: 1; }
+
+        .product-includes { border-top: 1px solid var(--border); padding-top: 0.85rem; }
+        .product-includes-label {
+            font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.09em; color: var(--accent); margin-bottom: 0.5rem; display: block;
+        }
+        .product-includes-label.league { color: var(--league); }
+        .product-includes ul { list-style: none; display: flex; flex-direction: column; gap: 0.3rem; }
+        .product-includes ul li { font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: flex-start; gap: 0.4rem; }
+        .product-includes ul li::before { content: '›'; color: var(--accent); flex-shrink: 0; }
+        .product-includes.league-includes ul li::before { color: var(--league); }
+
+        .product-footer {
+            border-top: 1px solid var(--border); padding-top: 1rem; margin-top: auto;
+            display: flex; flex-direction: column; gap: 0.85rem;
+        }
+
+        .price-block { display: flex; flex-direction: column; gap: 0.35rem; }
+        .price-row-display {
+            display: flex; align-items: stretch;
+            background: var(--bg-subtle); border: 1px solid var(--border);
+            border-radius: var(--r); overflow: hidden; width: 100%;
+        }
+        .price-cell { display: flex; flex-direction: column; flex: 1; padding: 0.55rem 0.9rem; gap: 0.1rem; }
+        .price-cell-label { font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-faint); white-space: nowrap; }
+        .price-cell-value { font-size: 0.9375rem; font-weight: 500; color: var(--text-muted); white-space: nowrap; }
+        .price-divider { width: 1px; align-self: stretch; background: var(--border); flex-shrink: 0; }
+        .price-cell.partner { background: var(--accent-dim); }
+        .price-cell.partner .price-cell-label { color: var(--accent); }
+        .price-cell.partner .price-cell-value { font-family: var(--font-serif); font-size: 1.05rem; color: var(--accent); font-weight: 400; }
+        .price-cell.partner-league { background: var(--league-dim); }
+        .price-cell.partner-league .price-cell-label { color: var(--league); }
+        .price-cell.partner-league .price-cell-value { font-family: var(--font-serif); font-size: 1.05rem; color: var(--league); font-weight: 400; }
+        .price-note { font-size: 0.72rem; color: var(--text-faint); font-style: italic; }
+        .ad-spend-note { font-size: 0.72rem; color: var(--text-faint); font-style: italic; }
+
+        .action-block { display: flex; align-items: center; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap; }
+        .badge-row { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+        .saving-badge {
+            background: var(--accent-dim); border: 1px solid var(--accent-mid);
+            color: var(--accent); font-size: 0.7rem; font-weight: 600;
+            padding: 0.18rem 0.55rem; border-radius: 100px;
+        }
+        .saving-badge.league { background: var(--league-dim); border-color: var(--league-mid); color: var(--league); }
+        .free-badge {
+            background: var(--gold-dim); border: 1px solid var(--gold-mid);
+            color: var(--gold); font-size: 0.68rem; font-weight: 700;
+            padding: 0.18rem 0.55rem; border-radius: 100px;
+            text-transform: uppercase; letter-spacing: 0.05em;
+        }
+
+        .add-btn {
+            display: inline-flex; align-items: center; gap: 0.4rem;
+            background: var(--accent); color: #fff; border: none; border-radius: var(--r);
+            padding: 0.6rem 1.15rem; font-size: 0.82rem; font-weight: 500;
+            cursor: pointer; font-family: inherit; text-decoration: none;
+            transition: opacity 0.2s, transform 0.2s; white-space: nowrap;
+        }
+        .add-btn:hover { opacity: 0.88; transform: translateY(-1px); }
+        .add-btn.league-btn { background: var(--league); color: #1B1B1B; }
+
+        .milestone-banner {
+            background: var(--accent-dim); border: 1px solid var(--accent-mid);
+            border-radius: var(--r); padding: 1.5rem 1.75rem;
+            display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+            margin-bottom: 1.75rem;
+        }
+        .milestone-icon { font-size: 1.6rem; flex-shrink: 0; }
+        .milestone-text h3 { font-size: 0.9375rem; margin-bottom: 0.3rem; }
+        .milestone-text p { font-size: 0.875rem; color: var(--text-muted); }
+        .milestone-text strong { color: var(--accent); }
+
+        .league-intro-banner {
+            background: var(--league-dim); border: 1px solid var(--league-mid);
+            border-radius: var(--r); padding: 1.5rem 1.75rem;
+            display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap;
+            margin-bottom: 1.75rem;
+        }
+        .league-intro-banner .milestone-text strong { color: var(--league); }
+
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 2rem; }
+        .info-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r); padding: 1.5rem; }
+        .info-card .info-icon { font-size: 1.4rem; margin-bottom: 0.75rem; }
+        .info-card h3 { font-size: 0.9375rem; margin-bottom: 0.4rem; }
+        .info-card p { font-size: 0.85rem; color: var(--text-muted); }
+        .info-card a { color: var(--accent); text-decoration: none; }
+
+        #how-it-works { padding-bottom: 0 !important; }
+
+        /* Kill Squarespace wrapper padding around this code block */
+        .sqs-block.code-block,
+        .sqs-block-code,
+        .sqs-block-content,
+        .code-block .sqs-block-content {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        [data-block-type="1337"] {
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+        [data-sqsp-section] {
+            padding-bottom: 0 !important;
+            min-height: 0 !important;
+        }
+
+        .cta-band { background: var(--accent); padding: 2.5rem 1.5rem; text-align: center; flex-shrink: 0; }
+        .cta-band h2 { color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 0.6rem; }
+        .cta-band p { color: rgba(255,255,255,0.85); font-size: 0.9375rem; max-width: 50ch; margin: 0 auto 1.5rem; }
+        .cta-band .cta-btn { background: #fff; color: var(--accent); display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.8rem 1.6rem; font-size: 0.9rem; font-weight: 500; text-decoration: none; border-radius: var(--r); transition: all 0.2s; }
+        .cta-band .cta-btn:hover { background: rgba(255,255,255,0.9); transform: translateY(-1px); }
+
+        footer { border-top: 1px solid var(--border); padding: 1.5rem 0 0; }
+        .footer-inner {
+            max-width: var(--max); margin: 0 auto; padding: 0 1.5rem 1rem;
+            display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1.25rem;
+        }
+        .footer-inner img { height: 24px; width: auto; opacity: 0.7; }
+        .footer-links { display: flex; gap: 1.5rem; flex-wrap: wrap; }
+        .footer-links a { font-size: 0.8125rem; color: var(--text-muted); text-decoration: none; }
+        .footer-links a:hover { color: var(--accent); }
+        .footer-legal { width: 100%; text-align: center; font-size: 0.75rem; color: var(--text-faint); padding: 0.75rem 1.5rem 0.75rem; border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<div class="scroll-bar" id="scrollBar"></div>
+
+<nav>
+    <div class="nav-inner">
+        <a href="https://www.thenbrh.co.uk/" class="nav-brand">
+            <img src="https://images.squarespace-cdn.com/content/6718416feaa24175e29324d4/9d6e6464-e1e5-4dde-9ae0-03df420cbd77/NBRH+Logo.png?content-type=image%2Fpng" alt="The NBRH">
+        </a>
+        <ul class="nav-links">
+            <li><a href="#store">All Services</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-content">
+            <div class="wrap">
+                <div class="store-badge">Club Services Store</div>
+                <h1>More tools.<br>Bigger reach.<br>Better results.</h1>
+                <p class="lead">Browse our add-ons and upgrade your club&rsquo;s presence at any point during your pilot &mdash; or beyond. Partner pricing applied automatically.</p>
+                <div class="btn-row">
+                    <a href="#store" class="btn btn-primary">Browse Services</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-num">14</span>
+                        <span class="hero-stat-label">Services Available</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-num">~35%</span>
+                        <span class="hero-stat-label">Avg. Partner Saving</span>
+                    </div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-num">&infin;</span>
+                        <span class="hero-stat-label">Milestone Rewards</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- STORE -->
+    <section id="store">
+        <div class="wrap">
+            <div class="section-head">
+                <p class="eyebrow">All Services</p>
+                <h2>Everything available for your club.</h2>
+                <p class="sub">Pick what you need, when you need it. All prices shown are your Club House rate &mdash; always lower than standard.</p>
+            </div>
+
+            <div class="accordion">
+
+                <!-- CONTENT ADD-ONS -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger open" data-target="acc-content" aria-expanded="true">
+                        <div class="accordion-trigger-left">
+                            <span class="accordion-tag tag-paid">Optional Paid Extras</span>
+                            <span class="accordion-title">Content Add-Ons</span>
+                            <span class="accordion-sub">Premium content services at partner rates</span>
+                        </div>
+                        <span class="accordion-chevron">&#9660;</span>
+                    </button>
+                    <div class="accordion-body open" id="acc-content">
+                        <div class="accordion-body-inner">
+                            <div class="accordion-body-content">
+                                <div class="product-grid">
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#9997;&#65039;</div>
+                                            <div class="product-title-block">
+                                                <h3>Club Blog Post</h3>
+                                                <span class="tagline">About your club, founder, or sessions</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">A professionally written, SEO-optimised long-form article that tells your club&rsquo;s story &mdash; who you are, what you offer, and why people should show up. We interview you, do the research, and write it up in a way that builds credibility and drives organic discovery. The kind of content that still works six months after it&rsquo;s published.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label">What&rsquo;s Included</span>
+                                            <ul>
+                                                <li>800&ndash;1,200 word feature article</li>
+                                                <li>Published on The NBRH platform</li>
+                                                <li>SEO meta titles and descriptions written</li>
+                                                <li>Shareable link for your own channels</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;60.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;35.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row"><span class="saving-badge">Save &pound;25</span></div>
+                                                <a href="https://www.thenbrh.co.uk/ao-club-blog-post" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#127916;</div>
+                                            <div class="product-title-block">
+                                                <h3>Original Video Content</h3>
+                                                <span class="tagline">Shot at one of your sessions</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">We come to you. One of our team attends a live session, captures the atmosphere, the action, and the community &mdash; then edits it into a polished short-form video built for Instagram Reels, your website, and beyond. The kind of content that turns viewers into players. Video consistently outperforms static content across every platform.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label">What&rsquo;s Included</span>
+                                            <ul>
+                                                <li>On-location filming at one of your sessions</li>
+                                                <li>1x edited Reel (30&ndash;60 seconds) optimised for Instagram</li>
+                                                <li>1x longer cut for website or YouTube use</li>
+                                                <li>Delivered within 7 days of filming</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;120.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;80.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row"><span class="saving-badge">Save &pound;40</span></div>
+                                                <a href="https://www.thenbrh.co.uk/ao-original-video-content" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128202;</div>
+                                            <div class="product-title-block">
+                                                <h3>Deep Search Marketing Report</h3>
+                                                <span class="tagline">In-depth analysis of your market and opportunities</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">A research-led report that maps your competitive landscape, identifies the audiences you&rsquo;re missing, and surfaces the channels, keywords, and tactics most likely to drive growth. Built specifically for your club, your location, and your sport &mdash; not a generic template. Everything you need to make smarter decisions about where to invest your time and budget.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label">What&rsquo;s Included</span>
+                                            <ul>
+                                                <li>Competitor audit (local and digital)</li>
+                                                <li>Audience and demand analysis</li>
+                                                <li>Channel recommendations with rationale</li>
+                                                <li>Quick-win action plan with priorities</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;60.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;40.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row"><span class="saving-badge">Save &pound;20</span></div>
+                                                <a href="https://www.thenbrh.co.uk/ao-deep-search-marketing-report" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128203;</div>
+                                            <div class="product-title-block">
+                                                <h3>Custom Member Survey</h3>
+                                                <span class="tagline">Tailored survey to capture session attendee feedback</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">Understanding what your players think &mdash; and what they want more of &mdash; is one of the most powerful tools for retention and growth. We design a bespoke survey tailored to your club&rsquo;s specific questions, distribute it to your attendees, and present back a clean summary of findings with actionable recommendations. Stop guessing. Start knowing.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label">What&rsquo;s Included</span>
+                                            <ul>
+                                                <li>Up to 15 custom survey questions</li>
+                                                <li>Branded survey design and distribution link</li>
+                                                <li>Response summary and insight report</li>
+                                                <li>Recommendations based on findings</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;50.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;30.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row"><span class="saving-badge">Save &pound;20</span></div>
+                                                <a href="https://www.thenbrh.co.uk/ao-custom-member-survey" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLUB ADD-ONS -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger open" data-target="acc-addons" aria-expanded="true">
+                        <div class="accordion-trigger-left">
+                            <span class="accordion-tag tag-milestone">Earn Free Via Milestones</span>
+                            <span class="accordion-title">Club Add-Ons</span>
+                            <span class="accordion-sub">Buy directly or unlock through milestones</span>
+                        </div>
+                        <span class="accordion-chevron">&#9660;</span>
+                    </button>
+                    <div class="accordion-body open" id="acc-addons">
+                        <div class="accordion-body-inner">
+                            <div class="accordion-body-content">
+
+                                <div class="milestone-banner">
+                                    <div class="milestone-icon">&#127919;</div>
+                                    <div class="milestone-text">
+                                        <h3>Earn these for free</h3>
+                                        <p>Every <strong>20 additional user sign-ups</strong> or every <strong>20 additional mutual Instagram followers</strong> earns your club one free add-on from this list. No cap on how many you can earn.</p>
+                                    </div>
+                                </div>
+
+                                <div class="product-grid">
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128204;</div>
+                                            <div class="product-title-block">
+                                                <h3>Additional Sponsored Session</h3>
+                                                <span class="tagline">Extra featured placement on the platform</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">Puts one of your sessions in a featured, high-visibility spot on The NBRH platform &mdash; surfaced prominently to users browsing your sport and area. Ideal for launching a new session time, filling a struggling slot, or giving your most popular session an extra push when you need it most.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;35.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;20.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;15</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-additional-sponsored-session" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128197;</div>
+                                            <div class="product-title-block">
+                                                <h3>Additional Session Listing</h3>
+                                                <span class="tagline">List beyond the 5-session pilot limit</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">Running more than five regular sessions? Each additional listing gives you another fully set-up session page on The NBRH &mdash; complete with booking, description, and discovery. Every session listed is another entry point for new players to find you. More listings means more reach.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;15.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;8.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;7</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-additional-session-listing" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128205;</div>
+                                            <div class="product-title-block">
+                                                <h3>7-Day Pinned Post On Instagram</h3>
+                                                <span class="tagline">Pinned at the top of our Insta page</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">Keep your most important message front and centre for a full seven days. Whether it&rsquo;s an upcoming event, a new session launch, a promo offer, or a recruitment push &mdash; this pins a custom post to the very top of our page so every visitor sees it first. Great for time-sensitive announcements that need maximum visibility.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;30.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;20.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;10</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-7-day-pinned-post" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#127919;</div>
+                                            <div class="product-title-block">
+                                                <h3>Targeted Boosted Sessions Reel</h3>
+                                                <span class="tagline">Additional paid Instagram promotion</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">We produce and boost a dedicated Reel built around your sessions &mdash; targeted to Instagram users in your area who match the profile of your ideal player. Paid promotion cuts through the algorithm and puts your sessions directly in front of people who don&rsquo;t follow you yet. We handle the creative, targeting, and reporting.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;65.00 + Ad</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;45.00 + Ad</span>
+                                                    </div>
+                                                </div>
+                                                <span class="ad-spend-note">Ad spend budget agreed with you separately</span>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;20</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-targeted-boosted-sessions-reel" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128227;</div>
+                                            <div class="product-title-block">
+                                                <h3>Boosted Club Awareness Reel</h3>
+                                                <span class="tagline">Additional club spotlight</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">A boosted Instagram Reel focused on building name recognition and audience growth for your club &mdash; less session-specific, more brand-building. We craft a creative that showcases the vibe, the community, and the experience of being part of what you&rsquo;ve built. Then we put paid fuel behind it to grow your following and awareness in the right areas.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;65.00 + Ad</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;45.00 + Ad</span>
+                                                    </div>
+                                                </div>
+                                                <span class="ad-spend-note">Ad spend budget agreed with you separately</span>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;20</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-boosted-club-awareness-reel" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128172;</div>
+                                            <div class="product-title-block">
+                                                <h3>Additional Cold Outreach</h3>
+                                                <span class="tagline">3 additional online groups targeted on your behalf</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">We identify and reach out to one additional relevant online community &mdash; Facebook groups, Reddit threads, WhatsApp communities, Discord servers &mdash; with a natural, non-spammy message introducing your sessions to people actively looking for exactly what you offer. Each group is a fresh pool of potential regulars you haven&rsquo;t tapped yet.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;40.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;25.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;15</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-additional-cold-outreach" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128276;</div>
+                                            <div class="product-title-block">
+                                                <h3>Session Filler Outreach</h3>
+                                                <span class="tagline">1 extra targeted fill campaign</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">Got a session that needs filling fast? We run a focused outreach campaign &mdash; messaging users in the NBRH database who match your session&rsquo;s sport, location, and availability. Direct, targeted communication designed to convert interest into bookings quickly. Useful for last-minute gaps, newly added slots, or sessions consistently running below capacity.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;25.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;15.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;10</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-session-filler-outreach" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#127915;</div>
+                                            <div class="product-title-block">
+                                                <h3>Booking Page</h3>
+                                                <span class="tagline">Managed bookings and events workflow for your sessions</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">We build and manage a fully integrated booking page for your sessions &mdash; you set the price, give us the details, and we&rsquo;ll handle the rest. Your booking page connects seamlessly with your club profile, session listings, and the wider NBRH platform, so players can discover and book in one smooth flow. We&rsquo;ll work alongside you and your team to keep everything running and up to date.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label">What&rsquo;s Included</span>
+                                            <ul>
+                                                <li>Fully set-up booking page for your sessions</li>
+                                                <li>Integrated with your NBRH club profile and listings</li>
+                                                <li>You control your pricing &mdash; we handle the infrastructure</li>
+                                                <li>Ongoing events workflow management alongside your team</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;1.00 / booking</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">70p / booking</span>
+                                                    </div>
+                                                </div>
+                                                <span class="price-note">No setup fee. You only pay per confirmed booking.</span>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save 30p / booking</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-booking-page" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#127912;</div>
+                                            <div class="product-title-block">
+                                                <h3>Marketing / Branding Project</h3>
+                                                <span class="tagline">A bespoke creative project for your club</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">A fully bespoke creative deliverable built around a specific goal &mdash; a rebrand, a campaign identity, a new set of templates, a promotional flyer series, or a social media content kit. We scope it with you first so you know exactly what you&rsquo;re getting. No guesswork, no generic outputs. Built for your club, from scratch.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label">Examples of What This Covers</span>
+                                            <ul>
+                                                <li>Club identity refresh and branding</li>
+                                                <li>Custom digital solutions such as widgets, tools, league tables etc</li>
+                                                <li>Social media template pack (Stories, Reels covers, Posts)</li>
+                                                <li>Promotional campaign design and copy</li>
+                                                <li>Kit and merchandise design</li>
+                                                <li>Event flyers, posters, or digital assets</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;100.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;70.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;30</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-marketing-/-branding-project" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LEAGUES -->
+                <div class="accordion-item">
+                    <button class="accordion-trigger leagues-trigger open" data-target="acc-leagues" aria-expanded="true">
+                        <div class="accordion-trigger-left">
+                            <span class="accordion-tag tag-leagues">Leagues</span>
+                            <span class="accordion-title">League Management</span>
+                            <span class="accordion-sub">Full-service league infrastructure, built and managed by The NBRH</span>
+                        </div>
+                        <span class="accordion-chevron">&#9660;</span>
+                    </button>
+                    <div class="accordion-body open" id="acc-leagues">
+                        <div class="accordion-body-inner">
+                            <div class="accordion-body-content">
+
+                                <div class="league-intro-banner">
+                                    <div class="milestone-icon">&#127942;</div>
+                                    <div class="milestone-text">
+                                        <h3>Your league, fully managed</h3>
+                                        <p>Everything your league needs to run professionally &mdash; fixtures, tables, club pages, FAQs and more &mdash; all <strong>built, branded, and maintained by The NBRH</strong> for the full season. You focus on running the games. We&rsquo;ll handle the rest.</p>
+                                    </div>
+                                </div>
+
+                                <div class="product-grid">
+                                    <div class="product-card league-card">
+                                        <div class="product-header">
+                                            <div class="product-icon league-icon">&#127941;</div>
+                                            <div class="product-title-block">
+                                                <h3>League Page Management</h3>
+                                                <span class="tagline">A fully dynamic league hub, managed for the season</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">Everything your league needs in one place. We build and maintain a fully dynamic, branded league page on The NBRH &mdash; keeping fixtures updated, the table live, club profiles current, and FAQs accurate throughout the season. No more chasing spreadsheets or fielding the same questions. One link you can share with every team, every player, every season. The cost of this add on can be paid in monthly installments.</p>
+                                        <div class="product-includes">
+                                            <span class="product-includes-label league">What&rsquo;s Included</span>
+                                            <ul>
+                                                <li>Dynamic league table updated after every round of fixtures</li>
+                                                <li>Full fixture list with results, dates, and venues</li>
+                                                <li>Individual club and team profile pages</li>
+                                                <li>We conduct outreach to find new players and teams</li>
+                                                <li>We offer custom branding and additions to your league page</li>
+                                                <li>We share valuable data and insights</li>
+                                                <li>We support with the marketing &amp; paid promotion of the league</li>
+                                                <li>We support on content creation &amp; branding</li>
+                                                <li>League rules, format, and FAQ section</li>
+                                                <li>Season-long page management by The NBRH team</li>
+                                                <li>Shareable league link for players, clubs, and social media</li>
+                                            </ul>
+                                        </div>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Standard Price</span>
+                                                        <span class="price-cell-value">&pound;60.00 / month</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner-league">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;50.00 / month</span>
+                                                    </div>
+                                                </div>
+                                                <span class="price-note">Priced per league, per season. Season length agreed at setup.</span>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge league">Save &pound;10</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-league-management" class="add-btn league-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <div class="divider"></div>
+
+    <!-- HOW IT WORKS -->
+    <section id="how-it-works">
+        <div class="wrap">
+            <div class="section-head">
+                <p class="eyebrow">How It Works</p>
+                <h2>Ordering is simple.</h2>
+                <p class="sub">No complicated checkout. Just tell us what you want and we&rsquo;ll sort the rest.</p>
+            </div>
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-icon">1&#65039;&#8419;</div>
+                    <h3>Browse &amp; choose</h3>
+                    <p>Pick one or more services from the store above. Mix and match across Content Add-Ons, Club Add-Ons, and Leagues freely.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">2&#65039;&#8419;</div>
+                    <h3>Get in touch</h3>
+                    <p>Hit &ldquo;Get this Add-on&rdquo; on anything you&rsquo;re interested in, or drop us a message at <a href="mailto:thenbhr@gmail.com">thenbhr@gmail.com</a>.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">3&#65039;&#8419;</div>
+                    <h3>We confirm &amp; deliver</h3>
+                    <p>We&rsquo;ll confirm scope, timelines, and next steps. Club House pricing is applied automatically &mdash; no need to ask.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-icon">&#127919;</div>
+                    <h3>Earn add-ons free</h3>
+                    <p>Every 20 new user sign-ups or 20 mutual followers earns you one free Club Add-On of your choice. No limit.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BAND -->
+    <div class="cta-band">
+        <div class="wrap">
+            <h2>Not sure what you need?</h2>
+            <p>Tell us your goals and we&rsquo;ll suggest what&rsquo;s likely to move the needle most.</p>
+            <a href="mailto:thenbhr@gmail.com" class="cta-btn">Talk to us &rarr;</a>
+        </div>
+    </div>
+
+</main>
+
+<footer>
+    <div class="footer-inner">
+        <img src="https://images.squarespace-cdn.com/content/6718416feaa24175e29324d4/9d6e6464-e1e5-4dde-9ae0-03df420cbd77/NBRH+Logo.png?content-type=image%2Fpng" alt="The NBRH">
+        <div class="footer-links"></div>
+        <div class="footer-legal">&copy; 2026 The NBRH (Neighbourhood). All rights reserved.</div>
+    </div>
+</footer>
+
+<script>
+    var bar = document.getElementById('scrollBar');
+    window.addEventListener('scroll', function () {
+        var pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+        bar.style.width = pct + '%';
+    });
+
+    document.querySelectorAll('.accordion-trigger').forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+            var body = document.getElementById(this.dataset.target);
+            var isOpen = this.classList.contains('open');
+            if (isOpen) {
+                this.classList.remove('open');
+                this.setAttribute('aria-expanded', 'false');
+                body.classList.remove('open');
+            } else {
+                this.classList.add('open');
+                this.setAttribute('aria-expanded', 'true');
+                body.classList.add('open');
+            }
+        });
+    });
+</script>
+</body>
+</html>
