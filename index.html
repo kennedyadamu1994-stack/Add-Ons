@@ -43,8 +43,6 @@
         }
 
         html { scroll-behavior: smooth; font-size: 16px; }
-
-        /* FIX: Use flex column on html/body so footer sits flush with no trailing space */
         html, body { height: 100%; }
 
         body {
@@ -58,33 +56,13 @@
             flex-direction: column;
         }
 
-        /* FIX: Main content grows to fill available space; footer is pushed to bottom */
-        main {
-            flex: 1 0 auto;
-            display: flex;
-            flex-direction: column;
-        }
+        main { flex: 1 0 auto; display: flex; flex-direction: column; }
+        footer { flex-shrink: 0; }
 
-        /* FIX: Footer never grows, always sits flush at the bottom */
-        footer {
-            flex-shrink: 0;
-        }
-
-        /* FIX: Zero out bottom padding on any section immediately before the footer or CTA band,
-           and on the last section in the flow — prevents trailing whitespace no matter
-           which elements are visible/hidden. Matches the league page's implicit behaviour. */
         section:last-of-type,
         section:has(+ .cta-band),
         section:has(+ .divider + footer),
-        section:has(+ footer) {
-            padding-bottom: 0;
-        }
-
-        /* FIX: CTA band sits directly on footer with no gap */
-        .cta-band + footer,
-        .divider + footer {
-            /* border-top already provides the visual break */
-        }
+        section:has(+ footer) { padding-bottom: 0; }
 
         .scroll-bar {
             position: fixed; top: 0; left: 0;
@@ -145,7 +123,6 @@
         .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
         .btn-row { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
 
-        /* HERO */
         .hero { position: relative; overflow: hidden; text-align: center; padding: 0; }
         .hero-bg {
             position: absolute; inset: 0;
@@ -178,11 +155,9 @@
         .hero-stat-num { font-family: var(--font-serif); font-size: 1.6rem; color: var(--accent); display: block; line-height: 1; }
         .hero-stat-label { font-size: 0.78rem; color: var(--text-faint); margin-top: 0.35rem; }
 
-        /* ACCORDION */
         #store { padding: 3rem 0; }
 
         .accordion { display: flex; flex-direction: column; }
-
         .accordion-item { border-top: 1px solid var(--border); }
         .accordion-item:last-child { border-bottom: 1px solid var(--border); }
 
@@ -219,7 +194,6 @@
         .accordion-trigger.open .accordion-chevron { transform: rotate(180deg); color: var(--accent); }
         .accordion-trigger.leagues-trigger.open .accordion-chevron { color: var(--league); }
 
-        /* CSS grid trick for smooth height animation with no JS height measurement */
         .accordion-body {
             display: grid; grid-template-rows: 0fr;
             transition: grid-template-rows 0.35s ease;
@@ -228,7 +202,6 @@
         .accordion-body-inner { overflow: hidden; }
         .accordion-body-content { padding-bottom: 2.5rem; }
 
-        /* PRODUCT GRID */
         .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
         @media (max-width: 660px) { .product-grid { grid-template-columns: 1fr; } }
 
@@ -351,22 +324,9 @@
 
         #how-it-works { padding-bottom: 4rem; }
 
-        /* Kill Squarespace wrapper padding around this code block */
-        .sqs-block.code-block,
-        .sqs-block-code,
-        .sqs-block-content,
-        .code-block .sqs-block-content {
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        [data-block-type="1337"] {
-            padding: 0 !important;
-            margin: 0 !important;
-        }
-        [data-sqsp-section] {
-            padding-bottom: 0 !important;
-            min-height: 0 !important;
-        }
+        .sqs-block.code-block, .sqs-block-code, .sqs-block-content, .code-block .sqs-block-content { padding: 0 !important; margin: 0 !important; }
+        [data-block-type="1337"] { padding: 0 !important; margin: 0 !important; }
+        [data-sqsp-section] { padding-bottom: 0 !important; min-height: 0 !important; }
 
         .cta-band { background: var(--accent); padding: 2.5rem 1.5rem; text-align: center; flex-shrink: 0; }
         .cta-band h2 { color: #fff; font-size: clamp(1.4rem, 3vw, 2rem); margin-bottom: 0.6rem; }
@@ -417,7 +377,7 @@
                 </div>
                 <div class="hero-stats">
                     <div class="hero-stat">
-                        <span class="hero-stat-num">14</span>
+                        <span class="hero-stat-num">15</span>
                         <span class="hero-stat-label">Services Available</span>
                     </div>
                     <div class="hero-stat">
@@ -920,6 +880,40 @@
                                                     <span class="free-badge">&#9733; Earnable Free</span>
                                                 </div>
                                                 <a href="https://www.thenbrh.co.uk/ao-booking-page" class="add-btn">Get this Add-on &rarr;</a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FUND FINDER -->
+                                    <div class="product-card">
+                                        <div class="product-header">
+                                            <div class="product-icon">&#128176;</div>
+                                            <div class="product-title-block">
+                                                <h3>Fund Finder</h3>
+                                                <span class="tagline">We search for funding opportunities for you and support your application</span>
+                                            </div>
+                                        </div>
+                                        <p class="product-description">We know how time consuming it can be to apply to funding opportunities or even know where to look. With this add-on, we work with you to help find the right opportunities, help you craft your applications and manage the entire process. If we can secure any funding for your club, you keep 100% of it. We are here to save you time, effort and provide expertise.</p>
+                                        <div class="product-footer">
+                                            <div class="price-block">
+                                                <div class="price-row-display">
+                                                    <div class="price-cell">
+                                                        <span class="price-cell-label">Full Price</span>
+                                                        <span class="price-cell-value">&pound;75.00</span>
+                                                    </div>
+                                                    <div class="price-divider"></div>
+                                                    <div class="price-cell partner">
+                                                        <span class="price-cell-label">Club House Price</span>
+                                                        <span class="price-cell-value">&pound;50.00</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="action-block">
+                                                <div class="badge-row">
+                                                    <span class="saving-badge">Save &pound;25</span>
+                                                    <span class="free-badge">&#9733; Earnable Free</span>
+                                                </div>
+                                                <a href="https://www.thenbrh.co.uk/ao-fund-finder" class="add-btn">Get this Add-on &rarr;</a>
                                             </div>
                                         </div>
                                     </div>
